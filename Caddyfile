@@ -11,7 +11,12 @@
 	}
 
 	handle_path /_accounts* {
-		reverse_proxy 127.0.0.1:3000
+		# account sets its session cookie on the parent domain (huly.example.com ->
+		# .example.com). For *.up.railway.app that is a public suffix, so browsers drop
+		# the cookie and every reload logs you out. A host-only cookie works everywhere.
+		reverse_proxy 127.0.0.1:3000 {
+			header_down Set-Cookie "(?i);\s*domain=[^;]*" ""
+		}
 	}
 	handle_path /_transactor* {
 		reverse_proxy 127.0.0.1:3333
