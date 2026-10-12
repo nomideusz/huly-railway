@@ -1,6 +1,6 @@
 # Deploy and Host Huly on Railway
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/huly-platform?utm_medium=integration&utm_source=button&utm_campaign=huly-platform)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/huly-platform?referralCode=sLjDXb&utm_medium=integration&utm_source=button&utm_campaign=huly-platform)
 
 [Huly](https://huly.io/) is the open-source all-in-one workspace that replaces Linear, Slack and Notion: issue tracking with projects, milestones and sprints, team chat with channels, threads and direct messages, collaborative documents, a planner and calendar, an HR and recruiting module. This template runs Huly 0.7.426, the current [huly-selfhost](https://github.com/hcengineering/huly-selfhost) release, on Postgres, Elasticsearch and Redpanda, and stores files in a Railway bucket.
 
