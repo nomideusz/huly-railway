@@ -206,6 +206,11 @@
           "defaultValue": "true",
           "description": "Hands the root-owned Railway volume to the elasticsearch user on boot",
           "isOptional": false
+        },
+        "ingest.geoip.downloader.enabled": {
+          "defaultValue": "false",
+          "description": "Skip the GeoIP database download on boot - Huly does not use it",
+          "isOptional": false
         }
       }
     },

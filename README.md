@@ -48,7 +48,7 @@ Upstream's `hulykvs` container is left out because none of the services in this 
 
 **Upgrades.** All `hardcoreeng/*` images are pinned to the same tag in the template repo's Dockerfile. Upgrading means bumping that tag, following upstream's [MIGRATION.md](https://github.com/hcengineering/huly-selfhost/blob/main/MIGRATION.md). The workspace service migrates existing workspaces when it starts.
 
-**Resources.** Huly is heavy. In local testing the Huly container idled at about 670 MB (peaking near 930 MB), Elasticsearch at about 1 GB, Redpanda at about 110 MB and Postgres at about 40 MB, for roughly 1.9 GB in total. Elasticsearch alone fills the Trial plan's 1 GB per service and Huly peaks close to it, so use the Hobby plan or above.
+**Resources.** Huly is heavy. On Railway, with one active workspace, the Huly service sits at about 1.05 GB, Elasticsearch at about 1 GB, Redpanda at about 165 MB and Postgres at about 150 MB, for roughly 2.4 GB in total. Huly and Elasticsearch each go over the Trial plan's 1 GB per service, so use the Hobby plan or above.
 
 ## Why Deploy Huly on Railway?
 
