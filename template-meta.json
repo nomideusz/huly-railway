@@ -1,0 +1,8 @@
+{
+  "name": "Huly | Open-Source Linear, Slack & Notion Alternative",
+  "short_name": "Huly Platform",
+  "description": "Issues, chat, docs and planning in one self-hosted team workspace",
+  "category": "Other",
+  "image": "https://raw.githubusercontent.com/nomideusz/huly-railway/main/icon.svg",
+  "card_desc": "Huly: the open-source all-in-one alternative to Linear, Slack and Notion. Issue tracking, team chat, collaborative docs and planning on Postgres, Elasticsearch and a Railway bucket."
+}

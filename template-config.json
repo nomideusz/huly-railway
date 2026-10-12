@@ -1,0 +1,247 @@
+{
+  "services": {
+    "96199ece-dc53-458c-9656-a7c1fc56c4cb": {
+      "icon": "https://raw.githubusercontent.com/nomideusz/huly-railway/main/icon.svg",
+      "name": "Huly",
+      "build": {},
+      "deploy": {
+        "startCommand": null,
+        "healthcheckPath": "/",
+        "restartPolicyType": "ON_FAILURE",
+        "restartPolicyMaxRetries": 10
+      },
+      "source": {
+        "repo": "https://github.com/nomideusz/huly-railway"
+      },
+      "networking": {
+        "serviceDomains": {
+          "<hasDomain>": {}
+        }
+      },
+      "variables": {
+        "PORT": {
+          "defaultValue": "8000",
+          "description": "Port the Caddy edge listens on - leave as is",
+          "isOptional": false
+        },
+        "SERVER_SECRET": {
+          "defaultValue": "${{secret(48, \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\")}}",
+          "description": "Signs every login and service token shared by Huly's services. Changing it logs everyone out",
+          "isOptional": false
+        },
+        "PUBLIC_URL": {
+          "defaultValue": "https://${{RAILWAY_PUBLIC_DOMAIN}}",
+          "description": "Public URL of Huly (sign-in, websockets, links) - set it to your custom domain after adding one",
+          "isOptional": false
+        },
+        "DB_URL": {
+          "defaultValue": "postgresql://${{Postgres.POSTGRES_USER}}:${{Postgres.POSTGRES_PASSWORD}}@${{Postgres.RAILWAY_PRIVATE_DOMAIN}}:5432/${{Postgres.POSTGRES_DB}}",
+          "description": "Postgres on the private network",
+          "isOptional": false
+        },
+        "FULLTEXT_DB_URL": {
+          "defaultValue": "http://${{Elasticsearch.RAILWAY_PRIVATE_DOMAIN}}:9200",
+          "description": "Elasticsearch on the private network (full-text search index)",
+          "isOptional": false
+        },
+        "QUEUE_CONFIG": {
+          "defaultValue": "${{Redpanda.RAILWAY_PRIVATE_DOMAIN}}:9092",
+          "description": "Redpanda (Kafka API) on the private network",
+          "isOptional": false
+        },
+        "S3_ENDPOINT": {
+          "defaultValue": "${{Files.ENDPOINT}}",
+          "description": "Railway bucket endpoint for attachments and documents",
+          "isOptional": false
+        },
+        "S3_BUCKET": {
+          "defaultValue": "${{Files.BUCKET}}",
+          "description": "Railway bucket name (every workspace gets its own prefix)",
+          "isOptional": false
+        },
+        "S3_REGION": {
+          "defaultValue": "${{Files.REGION}}",
+          "description": "Railway bucket region",
+          "isOptional": false
+        },
+        "S3_ACCESS_KEY": {
+          "defaultValue": "${{Files.ACCESS_KEY_ID}}",
+          "description": "Railway bucket access key",
+          "isOptional": false
+        },
+        "S3_SECRET_KEY": {
+          "defaultValue": "${{Files.SECRET_ACCESS_KEY}}",
+          "description": "Railway bucket secret key",
+          "isOptional": false
+        },
+        "TITLE": {
+          "defaultValue": "Huly",
+          "description": "Name shown in the browser tab",
+          "isOptional": false
+        },
+        "DEFAULT_LANGUAGE": {
+          "defaultValue": "en",
+          "description": "Default UI language (en, de, es, fr, it, pt, ru, zh, ja, cs, tr)",
+          "isOptional": false
+        },
+        "LAST_NAME_FIRST": {
+          "defaultValue": "true",
+          "description": "Show people as 'Last First' instead of 'First Last'",
+          "isOptional": false
+        },
+        "DISABLE_SIGNUP": {
+          "defaultValue": "false",
+          "description": "Set to true after your team has signed up to close public registration (invites still work)",
+          "isOptional": false
+        },
+        "ADMIN_EMAILS": {
+          "defaultValue": "",
+          "description": "Optional comma-separated emails that get Huly's instance admin console",
+          "isOptional": true
+        },
+        "RAILWAY_HEALTHCHECK_TIMEOUT_SEC": {
+          "defaultValue": "600",
+          "description": "First boot creates the database schema before the health check can pass",
+          "isOptional": false
+        }
+      }
+    },
+    "e769b7e1-91cf-4b63-af4e-15bf86ca34f1": {
+      "icon": "https://devicons.railway.com/i/postgresql.svg",
+      "name": "Postgres",
+      "build": {},
+      "deploy": {
+        "startCommand": null,
+        "healthcheckPath": null,
+        "restartPolicyType": "ON_FAILURE",
+        "restartPolicyMaxRetries": 10
+      },
+      "source": {
+        "image": "ghcr.io/railwayapp-templates/postgres-ssl:17"
+      },
+      "networking": {
+        "serviceDomains": {}
+      },
+      "volumeMounts": {
+        "cb64c4e5-d7af-4e74-9702-d695b7eb8487": {
+          "mountPath": "/var/lib/postgresql/data"
+        }
+      },
+      "variables": {
+        "POSTGRES_DB": {
+          "defaultValue": "huly",
+          "description": "Database name",
+          "isOptional": false
+        },
+        "POSTGRES_USER": {
+          "defaultValue": "huly",
+          "description": "Database user",
+          "isOptional": false
+        },
+        "POSTGRES_PASSWORD": {
+          "defaultValue": "${{secret(32, \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\")}}",
+          "description": "Auto-generated database password",
+          "isOptional": false
+        },
+        "PGDATA": {
+          "defaultValue": "/var/lib/postgresql/data/pgdata",
+          "description": "Data subdirectory - keeps Postgres happy on Railway volumes",
+          "isOptional": false
+        },
+        "RAILWAY_DEPLOYMENT_DRAINING_SECONDS": {
+          "defaultValue": "60",
+          "description": "Time for Postgres to shut down cleanly on redeploy",
+          "isOptional": false
+        }
+      }
+    },
+    "c4d596e7-030a-4cf0-9f1e-8630927a820f": {
+      "icon": "https://cdn.jsdelivr.net/npm/simple-icons@13.21.0/icons/elasticsearch.svg",
+      "name": "Elasticsearch",
+      "build": {},
+      "deploy": {
+        "startCommand": null,
+        "healthcheckPath": null,
+        "restartPolicyType": "ON_FAILURE",
+        "restartPolicyMaxRetries": 10
+      },
+      "source": {
+        "image": "elasticsearch:7.17.28"
+      },
+      "networking": {
+        "serviceDomains": {}
+      },
+      "volumeMounts": {
+        "959de842-0c7a-4207-91a4-484e4ca2fa27": {
+          "mountPath": "/usr/share/elasticsearch/data"
+        }
+      },
+      "variables": {
+        "discovery.type": {
+          "defaultValue": "single-node",
+          "description": "Single-node cluster",
+          "isOptional": false
+        },
+        "network.host": {
+          "defaultValue": "::",
+          "description": "Listen on IPv6 and IPv4 so Railway's private network can reach it",
+          "isOptional": false
+        },
+        "ES_JAVA_OPTS": {
+          "defaultValue": "-Xms512m -Xmx512m",
+          "description": "JVM heap - raise to 1g for large workspaces",
+          "isOptional": false
+        },
+        "xpack.security.enabled": {
+          "defaultValue": "false",
+          "description": "Private network only; Huly connects without credentials, like upstream",
+          "isOptional": false
+        },
+        "xpack.ml.enabled": {
+          "defaultValue": "false",
+          "description": "Machine learning off - saves memory, Huly does not use it",
+          "isOptional": false
+        },
+        "TAKE_FILE_OWNERSHIP": {
+          "defaultValue": "true",
+          "description": "Hands the root-owned Railway volume to the elasticsearch user on boot",
+          "isOptional": false
+        }
+      }
+    },
+    "37745006-9003-46fc-b97f-4ce1c461d43e": {
+      "icon": "https://raw.githubusercontent.com/redpanda-data/redpanda/dev/docs/icon-redpanda.svg",
+      "name": "Redpanda",
+      "build": {},
+      "deploy": {
+        "startCommand": "/bin/sh -c \"exec rpk redpanda start --mode dev-container --smp 1 --memory 400M --reserve-memory 0M --kafka-addr internal://[::]:9092 --advertise-kafka-addr internal://$RAILWAY_PRIVATE_DOMAIN:9092 --rpc-addr [::]:33145 --advertise-rpc-addr $RAILWAY_PRIVATE_DOMAIN:33145 --default-log-level=warn\"",
+        "healthcheckPath": null,
+        "restartPolicyType": "ON_FAILURE",
+        "restartPolicyMaxRetries": 10
+      },
+      "source": {
+        "image": "redpandadata/redpanda:v24.3.18"
+      },
+      "networking": {
+        "serviceDomains": {}
+      },
+      "volumeMounts": {
+        "83dc51d9-27a9-41d9-86ea-c68364c464ee": {
+          "mountPath": "/var/lib/redpanda/data"
+        }
+      },
+      "variables": {
+        "RAILWAY_RUN_UID": {
+          "defaultValue": "0",
+          "description": "Run as root so Redpanda can write to the root-owned Railway volume",
+          "isOptional": false
+        }
+      }
+    }
+  },
+  "buckets": {
+    "e9f987a6-616b-4e05-b0fc-ecaea6538fe2": {
+      "name": "Files"
+    }
+  }
+}
